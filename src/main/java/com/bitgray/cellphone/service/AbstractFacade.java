@@ -2,6 +2,7 @@ package com.bitgray.cellphone.service;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -17,16 +18,31 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) {
-        getEntityManager().persist(entity);
+    public Response create(T entity) {
+        try{
+            getEntityManager().persist(entity);
+        } catch(Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
-    public void edit(T entity) {
-        getEntityManager().merge(entity);
+    public Response edit(T entity) {
+        try{
+            getEntityManager().merge(entity);
+        } catch(Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
-    public void remove(T entity) {
-        getEntityManager().remove(getEntityManager().merge(entity));
+    public Response remove(T entity) {
+        try{
+            getEntityManager().remove(getEntityManager().merge(entity));
+        } catch(Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } 
+        return Response.status(Response.Status.OK).build();
     }
 
     public T find(Object id) {

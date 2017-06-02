@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -19,32 +20,32 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("/consume")
-public class ConsumeFacadeREST extends AbstractFacade<Consume> {
+public class ConsumeREST extends AbstractFacade<Consume> {
 
     @PersistenceContext(unitName = "cellphonePU")
     private EntityManager em;
 
-    public ConsumeFacadeREST() {
+    public ConsumeREST() {
         super(Consume.class);
     }
 
     @POST
     @Override
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Consume entity) {
-        super.create(entity);
+    public Response create(Consume entity) {
+        return super.create(entity);
     }
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Consume find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Consume> findAll() {
         return super.findAll();
     }
