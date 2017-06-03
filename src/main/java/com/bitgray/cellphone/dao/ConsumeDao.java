@@ -1,11 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bitgray.cellphone.dao;
 
+import com.bitgray.cellphone.entities.Consume;
+import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  *
@@ -13,5 +15,37 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ConsumeDao implements IConsumeDao{
+    
+    @PersistenceContext(unitName = "cellphonePU")
+    private EntityManager em;
+
+    @Override
+    public void create(Consume entity) {
+        getEntityManager().persist(entity);
+    }
+
+    @Override
+    public List<Consume> findAll() {
+        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Consume.class));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Consume> findByPhone(String mobilePhone) {
+        TypedQuery<Consume> query = em.createNamedQuery(
+                "Consume.findByMobilePhone", Consume.class);
+        query.setParameter("mobilePhone", mobilePhone);
+        return query.getResultList();
+    }
+    
+    protected EntityManager getEntityManager(){
+        return em;
+    }
+
+    @Override
+    public int getSumConsumeByPhone(String mobilePhone) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

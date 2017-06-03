@@ -1,7 +1,9 @@
 package com.bitgray.cellphone.service;
 
+import com.bitgray.cellphone.dao.IRefillDao;
 import com.bitgray.cellphone.entities.Refill;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,34 +23,26 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("/refill")
-public class RefillREST extends AbstractFacade<Refill> {
-
-    @PersistenceContext(unitName = "cellphonePU")
-    private EntityManager em;
-
-    public RefillREST() {
-        super(Refill.class);
-    }
+public class RefillREST {
+    
+    @EJB
+    private IRefillDao dao;
 
     @POST
-    @Override
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Refill entity) {
-        return super.create(entity);
+        try{
+            dao.create(entity);
+        } catch(Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Refill find(@PathParam("id") Integer id) {
-        return super.find(id);
-    }
-
-    @GET
-    @Override
     @Produces(MediaType.APPLICATION_JSON)
     public List<Refill> findAll() {
-        return super.findAll();
+        return dao.findAll();
     }
     
     @GET
@@ -56,15 +50,6 @@ public class RefillREST extends AbstractFacade<Refill> {
     @Produces(MediaType.APPLICATION_JSON)
     /* History by mobile phone */
     public List<Refill> findByMobilePhone(@PathParam("mobilePhone") String mobilePhone) {
-        TypedQuery<Refill> query = getEntityManager().createNamedQuery("Refill.findByMobilePhone", 
-                Refill.class);
-        query.setParameter("mobilePhone", mobilePhone);
-        return query.getResultList();
+       return dao.findByPhone(mobilePhone);
     }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-    
 }

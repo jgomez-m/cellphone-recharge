@@ -1,12 +1,10 @@
 package com.bitgray.cellphone.service;
 
+import com.bitgray.cellphone.dao.IParameterDao;
 import com.bitgray.cellphone.entities.Params;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NamedQuery;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,48 +20,32 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("/parameter")
-public class ParamsREST extends AbstractFacade<Params> {
+public class ParamsREST {
 
-    @PersistenceContext(unitName = "cellphonePU")
-    private EntityManager em;
-
-    public ParamsREST() {
-        super(Params.class);
-    }
-
+    @EJB
+    IParameterDao dao;
+    
     @POST
-    @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Params entity) {
-        return super.create(entity);
-    }
-
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Params find(@PathParam("id") Integer id) {
-        return super.find(id);
+        try{
+            dao.create(entity);
+        } catch(Exception e){
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.CREATED).build();
     }
     
     @GET
     @Path("/name/{name}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces( MediaType.APPLICATION_JSON)
     public Params findByName(@PathParam("name") String parameterName) {
-        TypedQuery<Params> query = getEntityManager().createNamedQuery(
-                "Params.findByName", Params.class);
-        return query.getSingleResult();
+        return dao.findByName(parameterName);
     }
 
     @GET
-    @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Params> findAll() {
-        return super.findAll();
+        return dao.findAll();
     }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-    
 }

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Params.findAll", query = "SELECT p FROM Params p")
     , @NamedQuery(name = "Params.findByParamsId", query = "SELECT p FROM Params p WHERE p.paramsId = :paramsId")
     , @NamedQuery(name = "Params.findByName", query = "SELECT p FROM Params p WHERE p.name = :name")
-    , @NamedQuery(name = "Params.findByValue", query = "SELECT p FROM Params p WHERE p.value = :value")})
+    , @NamedQuery(name = "Params.findByValue", query = "SELECT p FROM Params p WHERE p.paramValue = :paramValue")})
 public class Params implements Serializable {
 
     private static final long serialVersionUID = 1L;
