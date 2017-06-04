@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 
@@ -45,7 +46,10 @@ public class ConsumeDao implements IConsumeDao{
 
     @Override
     public int getSumConsumeByPhone(String mobilePhone) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query q = getEntityManager().createNativeQuery("select sum(number_seconds) from "
+                + "consume where mobile_phone = :mobilephone;");
+        q.setParameter("mobilephone", mobilePhone);
+        return q.getFirstResult();
     }
     
 }

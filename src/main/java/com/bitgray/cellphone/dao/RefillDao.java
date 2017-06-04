@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 
@@ -49,7 +50,10 @@ public class RefillDao implements IRefillDao{
 
     @Override
     public int getSumRefillByPhone(String mobilePhone) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query q = getEntityManager().createNativeQuery("select sum(price) from "
+                + "refill where mobile_phone = :mobilephone;");
+        q.setParameter("mobilephone", mobilePhone);
+        return q.getFirstResult();
     }
     
 }

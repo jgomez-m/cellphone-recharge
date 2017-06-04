@@ -37,13 +37,15 @@ public class ConsumeREST {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Consume> findAll() {
         return dao.findAll();
     }
     
     @GET
-    @Path("{mobilephone}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/{mobilephone}")
     public List<Consume> findByPhone(@PathParam("mobilephone") String mobilePhone){
         return dao.findByPhone(mobilePhone);
     }

@@ -5,9 +5,6 @@ import com.bitgray.cellphone.entities.Refill;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,6 +27,7 @@ public class RefillREST {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response create(Refill entity) {
         try{
             dao.create(entity);
@@ -46,10 +44,9 @@ public class RefillREST {
     }
     
     @GET
-    @Path("mobilephone/{mobilePhone}")
-    @Produces(MediaType.APPLICATION_JSON)
-    /* History by mobile phone */
-    public List<Refill> findByMobilePhone(@PathParam("mobilePhone") String mobilePhone) {
+    @Path("/mobilephone/{mobilephone}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public List<Refill> findByMobilePhone(@PathParam("mobilephone") String mobilePhone) {
        return dao.findByPhone(mobilePhone);
     }
 }
